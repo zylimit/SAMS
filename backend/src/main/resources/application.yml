@@ -1,0 +1,42 @@
+server:
+  port: 8080
+  tomcat:
+    max-http-form-post-size: 100MB
+    max-swallow-size: 110MB
+
+spring:
+  application:
+    name: sams
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
+      continue-on-error: true
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:sams}?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ${DB_USER:sams}
+    password: ${DB_PASSWORD:sams}
+    hikari:
+      maximum-pool-size: 16
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+
+sams:
+  jwt:
+    secret: ${JWT_SECRET:sams-dev-secret-change-me-please-32bytes!!}
+    expire-days: 30
+  session-days: 7
+  geo-data: ${GEO_DATA_PATH:../deploy/geo_data/ne_10m_admin_0_countries.geojson}
+
+logging:
+  level:
+    com.sams: INFO

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <Schema name="site" id="site">
+    <SimpleField name="SITE ID" type="string"></SimpleField>
+    <SimpleField name="OPTION" type="string"></SimpleField>
+    <SimpleField name="PROJECT" type="string"></SimpleField>
+    <SimpleField name="SITE STATUS" type="string"></SimpleField>
+    <SimpleField name="LATI" type="string"></SimpleField>
+    <SimpleField name="LONGI" type="string"></SimpleField>
+  </Schema>
+  <Placemark>
+    <ExtendedData>
+      <SchemaData schemaUrl="#site">
+        <SimpleData name="SITE ID">E2E001</SimpleData>
+        <SimpleData name="OPTION">A</SimpleData>
+        <SimpleData name="PROJECT">SAMS-E2E</SimpleData>
+        <SimpleData name="SITE STATUS">Unknown</SimpleData>
+        <SimpleData name="LATI">14.5995</SimpleData>
+        <SimpleData name="LONGI">120.9842</SimpleData>
+      </SchemaData>
+    </ExtendedData>
+    <Point><coordinates>120.9842,14.5995</coordinates></Point>
+  </Placemark>
+  <Placemark>
+    <ExtendedData>
+      <SchemaData schemaUrl="#site">
+        <SimpleData name="SITE ID">E2E002</SimpleData>
+        <SimpleData name="OPTION"></SimpleData>
+        <SimpleData name="PROJECT">SAMS-E2E</SimpleData>
+        <SimpleData name="SITE STATUS">Positive</SimpleData>
+        <SimpleData name="LATI">14.6760</SimpleData>
+        <SimpleData name="LONGI">121.0437</SimpleData>
+      </SchemaData>
+    </ExtendedData>
+    <Point><coordinates>121.0437,14.6760</coordinates></Point>
+  </Placemark>
+</Document>
+</kml>

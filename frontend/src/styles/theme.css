@@ -1,0 +1,122 @@
+/* V1.x #19 · 双主题主题变量（反转 #8 Light 单模式 → 默认 Dark Slate + 亮/暗切换）
+ *
+ * 唯一允许出现硬编码色值的文件。所有组件颜色必须引用这里。
+ * 主色板逐项对齐 Product-Spec.md「V1.x 视觉皮肤 → 模式切换（#19）→ 暗色主色板」表。
+ *
+ * 体系「只换值不换键」：
+ *   - 主题无关令牌（accent / 要素色 / 字体 / 圆角 / 地图护栏）只在 :root 写一次。
+ *   - 主题相关令牌：:root = Dark（默认），[data-theme="light"] = Light 覆盖。
+ *   - 不带 data-theme 属性时落到 :root → 默认暗色（Spec 硬约束 #1）。
+ */
+
+:root {
+  /* ============ 主题无关令牌（两主题共用，只写一次）============ */
+
+  /* accent 薄荷绿两主题共用 */
+  --accent: #10b981;              /* emerald-500 */
+  --accent-hover: #34d399;        /* emerald-400 hover 亮一点 */
+  --accent-10: rgba(16, 185, 129, 0.10);  /* 半透明叠加（dropdown hover / 选区填充） */
+  --accent-20: rgba(16, 185, 129, 0.18);
+
+  /* #34：选中态独立色（蓝），避开状态绿/红/黄/棕；两主题共用。
+     仅用于 selectedId 选中高亮，不替代全局 accent（按钮/复选框/focus 仍用 accent）。 */
+  --selected: #3b82f6;            /* blue-500 */
+
+  --warn: #f59e0b;                /* amber-500，两主题共用 */
+  --success: #10b981;             /* 同 accent */
+
+  /* ---- 要素 UI chrome 色（地图护栏：不参与主题切换）----
+     ⚠️ 数据语义色（site_status / relationship / road）已于 F20 Phase5 迁到
+        utils.ts 的 STATUS_COLOR 硬编码，原 --feat-site-positive/negative/unknown、
+        --feat-lessor-*、--feat-road 共 10 个变量已无人引用，删除。
+        此处仅保留 2 个 UI chrome 色（图标白描边 / 选中高亮）+ 框选色。 */
+  --feat-site-stroke: #ffffff;
+
+  --selection-stroke: var(--accent);
+  --selection-fill: var(--accent-10);
+  --feat-selected-stroke: var(--selected);   /* #34：地图选中描边走独立蓝（MapView 经 cssVar 自动跟）*/
+
+  /* ---- 地图护栏（恒亮，防重蹈 #7）---- */
+  --map-backdrop: #fafafa;        /* 地图容器底色（瓦片加载时露出）：恒为亮色，不随主题暗化 */
+  --ol-control-bg: rgba(255, 255, 255, 0.92);  /* OL 归属/比例尺浮层底，恒亮（浮在亮地图上）*/
+  --ol-control-text: #475569;     /* 上述亮浮层上的文字，恒为深 slate（防暗色下亮底白字消失）*/
+
+  /* ---- 字体 / 几何（两主题一致）---- */
+  --font-ui: 'Inter', 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont,
+             'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Iosevka', 'SF Mono', Menlo, Consolas, monospace;
+  --radius: 6px;
+  --transition-fast: 80ms ease;
+
+  /* ============ Dark Slate（默认主题，Spec 暗色主色板表）============ */
+
+  --panel: #273449;
+  --bg-app: #0f172a;              /* surface-base 深石板蓝，非纯黑 */
+  --bg-panel: #1e293b;            /* surface-raised 提亮一档 */
+  --bg-elevated: #273449;         /* surface-overlay 再提亮一档（弹窗/下拉）*/
+  --bg-input: #273449;            /* 输入框，浮于面板之上可见 */
+  --border: #334155;              /* slate-700 细灰蓝 */
+  --border-strong: #475569;       /* slate-600 */
+  --text: #e2e8f0;               /* 调白，非纯白（防高分屏震动）*/
+  --text-muted: #94a3b8;          /* slate-400 次文字 / 占位 */
+  --text-disabled: #64748b;       /* slate-500，比 muted 更暗 */
+
+  --accent-bg: rgba(16, 185, 129, 0.14);  /* 选中态半透明绿垫底 */
+  --selected-bg: rgba(59, 130, 246, 0.16);  /* #34：选中蓝半透明垫底（暗）*/
+
+  --warn-bg: rgba(245, 158, 11, 0.16);     /* warning banner 暗底 */
+  --error: #f87171;               /* 暗底亮一档红 */
+  --error-bg: rgba(248, 113, 113, 0.16);
+  --error-hover: #ef4444;         /* danger 按钮 hover */
+
+  --row-overwrite: rgba(245, 158, 11, 0.16);  /* 冲突列表覆盖行（暗底暖黄垫）*/
+  --row-ignore: #1e293b;          /* 同面板 */
+
+  /* 暗底阴影更深（Spec：暗底 0.35）*/
+  --shadow-panel: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.40);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-modal: 0 12px 40px rgba(0, 0, 0, 0.55);
+  --mask-modal: rgba(0, 0, 0, 0.60);
+
+  /* 暗色微交互：选中节点 / 激活按钮薄荷绿辉光（克制使用）*/
+  --glow: 0 0 8px rgba(16, 185, 129, 0.45);
+  --selected-glow: 0 0 8px rgba(59, 130, 246, 0.5);  /* #34：选中蓝辉光（暗）*/
+}
+
+/* ============ Light（原 Mint Tech 值，仅覆盖主题相关令牌）============ */
+
+[data-theme="light"] {
+  --panel: #ffffff;
+  --bg-app: #fafafa;
+  --bg-panel: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-input: #ffffff;
+  --border: #e5e7eb;
+  --border-strong: #cbd5e1;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --text-disabled: #94a3b8;
+
+  --accent-bg: #ecfdf5;           /* emerald-50 实底 */
+  --selected-bg: #eff6ff;         /* #34：选中蓝实底（亮，blue-50）*/
+
+  --warn-bg: #fef3c7;             /* amber-100 */
+  --error: #ef4444;               /* red-500 */
+  --error-bg: #fee2e2;            /* red-100 */
+  --error-hover: #c92a2a;
+
+  --row-overwrite: #fef3c7;
+  --row-ignore: #ffffff;
+
+  --shadow-panel: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.10);
+  --shadow-modal: 0 12px 40px rgba(0, 0, 0, 0.12);
+  --mask-modal: rgba(15, 23, 42, 0.40);
+
+  --glow: none;                   /* 亮色不发光 */
+  --selected-glow: none;          /* #34：亮色选中不发光 */
+}

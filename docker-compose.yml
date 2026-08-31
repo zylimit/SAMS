@@ -1,0 +1,59 @@
+# SAMS — Site Acquisition Management System
+# docker compose up -d --build
+# 前端 http://localhost:5174   后端 http://localhost:8080/health
+
+services:
+  db:
+    image: docker.m.daocloud.io/library/mysql:8.0
+    container_name: sams-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-samsroot}
+      MYSQL_DATABASE: ${DB_NAME:-sams}
+      MYSQL_USER: ${DB_USER:-sams}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-sams}
+    ports:
+      - "3306:3306"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-allowed-packet=128M
+    volumes:
+      - sams_mysqldata:/var/lib/mysql
+      - ./deploy/mysql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-usams", "-psams"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build:
+      context: ./backend
+    container_name: sams-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: ${DB_USER:-sams}
+      DB_PASSWORD: ${DB_PASSWORD:-sams}
+      DB_NAME: ${DB_NAME:-sams}
+      JWT_SECRET: ${JWT_SECRET:-sams-dev-secret-change-me-please-32bytes!!}
+      GEO_DATA_PATH: /app/geo_data/ne_10m_admin_0_countries.geojson
+    volumes:
+      - ./deploy/geo_data:/app/geo_data:ro
+    ports:
+      - "8080:8080"
+
+  web:
+    build:
+      context: ./frontend
+    container_name: sams-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "5174:80"
+
+volumes:
+  sams_mysqldata:

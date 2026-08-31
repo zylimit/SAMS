@@ -1,0 +1,17 @@
+target/
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+*.log
+.idea/
+.vscode/
+*.iml
+.DS_Store
+frontend/dist/
+backend/target/
+frontend/node_modules/
+backend/.classpath-jars
+backend/.mvn/wrapper/
+*.class
